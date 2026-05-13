@@ -1,3 +1,9 @@
+const { allowedChats } = require('./config')
+
+const checkAllowed = (msg) => {
+  if (!allowedChats || allowedChats.length === 0) return true
+  return allowedChats.includes(msg.chat.id)
+}
 import bot from './src/lib/bot'
 import { handleStart } from './src/handlers/start'
 import { handleChart } from './src/handlers/chart'
