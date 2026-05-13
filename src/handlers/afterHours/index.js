@@ -2,22 +2,18 @@ import {
   INVESTMENT_TRUST_START_BUYING,
   INVESTMENT_TRUST_DAILY_BUY_RANK,
   FOREIGN_INVESTOR_DAILY_BUY_RANK
-} from './actions'
-import handleInvestmentTruseStartBuying from './investmentTruseStartBuying'
-import handleInstitutionalInvestorDailyBuyRank from './institutionalInvestorDailyBuyRank'
-import { fetchStockData, isStockIdValid } from '../../lib/stock'
-import { stockAfterHoursLocator, stockAfterHoursUrl } from '../../../config'
-import { screenshot } from '../../lib/page'
-import { getStockCaptionTextTemplate } from '../../lib/template'
+} from './actions.js'
+import handleInvestmentTruseStartBuying from './investmentTruseStartBuying.js'
+import handleInstitutionalInvestorDailyBuyRank from './institutionalInvestorDailyBuyRank.js'
+import { fetchStockData, isStockIdValid } from '../../lib/stock.js'
+import { stockAfterHoursLocator, stockAfterHoursUrl } from '../../../config.js'
+import { screenshot } from '../../lib/page.js'
+import { getStockCaptionTextTemplate } from '../../lib/template.js'
 
 export const afterHoursCallbackQueryHandlers = {
   INVESTMENT_TRUST_START_BUYING: handleInvestmentTruseStartBuying,
-  INVESTMENT_TRUST_DAILY_BUY_RANK: handleInstitutionalInvestorDailyBuyRank(
-    INVESTMENT_TRUST_DAILY_BUY_RANK
-  ),
-  FOREIGN_INVESTOR_DAILY_BUY_RANK: handleInstitutionalInvestorDailyBuyRank(
-    FOREIGN_INVESTOR_DAILY_BUY_RANK
-  )
+  INVESTMENT_TRUST_DAILY_BUY_RANK: handleInstitutionalInvestorDailyBuyRank(INVESTMENT_TRUST_DAILY_BUY_RANK),
+  FOREIGN_INVESTOR_DAILY_BUY_RANK: handleInstitutionalInvestorDailyBuyRank(FOREIGN_INVESTOR_DAILY_BUY_RANK)
 }
 
 function handleGeneralAfterHours(msg) {
@@ -26,20 +22,11 @@ function handleGeneralAfterHours(msg) {
     reply_markup: {
       inline_keyboard: [
         [
-          {
-            text: '外資買超排行',
-            callback_data: FOREIGN_INVESTOR_DAILY_BUY_RANK
-          },
-          {
-            text: '投信買超排行',
-            callback_data: INVESTMENT_TRUST_DAILY_BUY_RANK
-          }
+          { text: '外資買超排行', callback_data: FOREIGN_INVESTOR_DAILY_BUY_RANK },
+          { text: '投信買超排行', callback_data: INVESTMENT_TRUST_DAILY_BUY_RANK }
         ],
         [
-          {
-            text: '投信連續無買賣超轉買進 – 日',
-            callback_data: INVESTMENT_TRUST_START_BUYING
-          }
+          { text: '投信連續無買賣超轉買進 – 日', callback_data: INVESTMENT_TRUST_START_BUYING }
         ]
       ]
     }
@@ -49,37 +36,22 @@ function handleGeneralAfterHours(msg) {
 async function handleStockAfterHours(msg, match) {
   const chatId = msg.chat.id
   const stockId = match[1]
-
   if (!isStockIdValid(stockId)) {
-    return this.sendMessage(
-      chatId,
-      '請輸入有效股號\ne.g. `/after_hours 2330`',
-      {
-        parse_mode: 'Markdown'
-      }
-    )
+    return this.sendMessage(chatId, '請輸入有效股號\ne.g. `/after_hours 2330`', { parse_mode: 'Markdown' })
   }
-
   const stockData = await fetchStockData(stockId)
   if (!stockData.name) {
     return this.sendStockIdNotFoundError(chatId, stockId)
   }
-
   const onLoad = await this.sendLoadingMsg(chatId)
   const locator = stockAfterHoursLocator
   const url = stockAfterHoursUrl.replace('STOCK_ID', stockId)
-  const chartBuffer = await screenshot(url, locator, {
-    waitUntil: 'networkidle0'
-  })
-
+  const chartBuffer = await screenshot(url, locator, { waitUntil: 'networkidle0' })
   if (!chartBuffer) {
     this.sendTimeoutError(chatId)
   } else {
-    this.sendPhoto(chatId, chartBuffer, {
-      caption: getStockCaptionTextTemplate(stockData)
-    })
+    this.sendPhoto(chatId, chartBuffer, { caption: getStockCaptionTextTemplate(stockData) })
   }
-
   onLoad()
 }
 
