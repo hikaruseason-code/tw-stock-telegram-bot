@@ -1,18 +1,12 @@
-FROM buildkite/puppeteer:latest
+FROM ghcr.io/puppeteer/puppeteer:latest
 
-RUN apt-get update && apt-get install -y \
-    unzip \
-    && rm -rf /var/lib/apt/lists/* \
-    && wget https://noto-website.storage.googleapis.com/pkgs/NotoSansCJKtc-hinted.zip -O font.zip \
-    && unzip font.zip \
-    && mkdir -p /usr/share/fonts/opentype/noto \
-    && mv *otf /usr/share/fonts/opentype/noto \
-    && fc-cache -f -v
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
+    PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome-stable
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
-COPY . ./
+COPY package*.json ./
+RUN npm ci
+COPY . .
 
-RUN npm install
-
-CMD npm run dev
+CMD ["node", "index.js"]
