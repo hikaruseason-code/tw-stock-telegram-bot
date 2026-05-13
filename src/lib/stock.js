@@ -1,19 +1,11 @@
 import fetch from 'isomorphic-fetch'
 import cheerio from 'cheerio'
-import { stockRawUrl } from '../../config'
+import { stockRawUrl } from '../../config.js'
 
 export const isStockIdValid = (stockId) => {
   return /^[0-9A-Z]+$/.test(stockId)
 }
 
-// ====================
-// stock quote raw data
-// ====================
-/**
- * Parse stock raw data from invalid JSON-like String to Object
- * @param {string} res response of fetch stock raw data
- * @returns {(object|null)}
- */
 export const parseRaw = (res) => {
   try {
     return JSON.parse(
@@ -26,29 +18,6 @@ export const parseRaw = (res) => {
   }
 }
 
-/**
- * Stock data object normalized by stockDataNormalizer()
- * @typedef {object} NormalizedStockData
- * @property {string} stockId "2330"
- * @property {string} currentPrice "447"
- * @property {string} risePrice "+3"
- * @property {string} risePricePerc "+1.2%"
- * @property {string} amount "29865"
- * @property {string} sellAmount "18873"
- * @property {string} buyAmount "11010"
- * @property {string} maxPrice "455"
- * @property {string} minPrice "446.5"
- * @property {string} openPrice "453"
- * @property {string} lastPrice "447"
- * @property {string} turnover 成交量 (億)
- * @property {array} ticks [[price, amount]]
- */
-
-/**
- * Normalize parsed data to object w/ necessary fields
- * @param {object} data  stock data parsed by parseRaw()
- * @returns {NormalizedStockData}
- */
 export const stockDataNormalizer = (data) => {
   const { mem = {}, id: stockId } = data || {}
   const name = mem.name
@@ -80,7 +49,7 @@ export const stockDataNormalizer = (data) => {
     [mem[108], mem[120]],
     [mem[109], mem[121]],
     [mem[110], mem[122]]
-  ] // [[price, amount]]
+  ]
 
   ticks = ticks.map((tick) => {
     return [tick[0] || '', tick[1] || '']
@@ -104,11 +73,6 @@ export const stockDataNormalizer = (data) => {
   }
 }
 
-/**
- * Fetch stock quotes
- * @param {string} stockId
- * @returns {NormalizedStockData}
- */
 export const fetchStockData = async (stockId) => {
   const res = await fetch(
     stockRawUrl.replace('STOCK_ID', stockId)
@@ -123,22 +87,6 @@ export const fetchStockData = async (stockId) => {
   return result
 }
 
-// ====================
-// crawl stock news data
-// ====================
-/**
- * News data crawled
- * @typedef {object} NewsItem
- * @property {string} title Article title
- * @property {string} link Article link
- * @property {string} source Article publish date & provider
- */
-
-/**
- * Crawl news list from yahoo stock
- * @param {string} stockId
- * @returns {(NewsItem[]|null)}
- */
 export const fetchStockNews = async (stockId) => {
   const res = await fetch(`https://tw.stock.yahoo.com/q/h?s=${stockId}`)
   if (!res || !res.ok || !/tw\.stock\.yahoo\.com\/q\/h\?s=/.test(res.url)) {
@@ -157,7 +105,6 @@ export const fetchStockNews = async (stockId) => {
           link: 'https://tw.stock.yahoo.com' + $link.attr('href'),
           source: ''
         }
-
         return [...list, newsItem]
       } else {
         list[list.length - 1].source = $(tr).find('font').text()
