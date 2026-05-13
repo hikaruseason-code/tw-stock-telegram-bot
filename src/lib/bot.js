@@ -1,7 +1,7 @@
 import TelegramBot from 'node-telegram-bot-api'
-import { botToken } from '../../config'
-import { handleCallbackQuery } from '../handlers/callbackQuery'
-import { handleInlineQuery } from '../handlers/inlineQuery'
+import { botToken } from '../../config.js'
+import { handleCallbackQuery } from '../handlers/callbackQuery.js'
+import { handleInlineQuery } from '../handlers/inlineQuery.js'
 
 const bot = new TelegramBot(botToken, {
   polling: true
@@ -20,7 +20,6 @@ bot.sendLoadingMsg = async (chatId) => {
   const { message_id } = await bot.sendMessage(chatId, '處理中，請稍候...', {
     disable_notification: true
   })
-
   return () => {
     return bot.deleteMessage(chatId, message_id)
   }
@@ -37,7 +36,4 @@ bot.sendTimeoutError = async (chatId) => {
   )
   setTimeout(() => {
     bot.deleteMessage(chatId, message_id)
-  }, 5000)
-}
-
-export default bot
+  }, 5
