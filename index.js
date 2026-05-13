@@ -1,17 +1,19 @@
-const { allowedChats } = require('./config')
+import bot from './src/lib/bot.js'
+import { handleStart } from './src/handlers/start.js'
+import { handleChart } from './src/handlers/chart.js'
+import { handleText } from './src/handlers/text.js'
+import { handleCandlestick } from './src/handlers/candlestick.js'
+import { handleStockNews } from './src/handlers/news.js'
+import { handleAfterHours } from './src/handlers/afterHours.js'
+import { createRequire } from 'module'
+
+const require = createRequire(import.meta.url)
+const { allowedChats } = require('./config.js')
 
 const checkAllowed = (msg) => {
   if (!allowedChats || allowedChats.length === 0) return true
   return allowedChats.includes(msg.chat.id)
 }
-import bot from './src/lib/bot'
-import { handleStart } from './src/handlers/start'
-import { handleChart } from './src/handlers/chart'
-import { handleText } from './src/handlers/text'
-import { handleCandlestick } from './src/handlers/candlestick'
-import { handleStockNews } from './src/handlers/news'
-import { handleAfterHours } from './src/handlers/afterHours'
-import './herokuServer'
 
 const routeConfig = {
   '^/start$': handleStart,
