@@ -1,4 +1,4 @@
-import { screenshot, getElementInnerText } from '../../lib/page'
+import { screenshot, getElementInnerText } from '../../lib/page.js'
 import {
   investmentTrustDailyBuyUrl,
   foreignInvestorDailyBuyUrl,
@@ -6,11 +6,11 @@ import {
   foreignInvestorDailyBuyDateLocator,
   investmentTrustDailyBuyTableLocator,
   foreignInvestorDailyBuyTableLocator
-} from '../../../config'
+} from '../../../config.js'
 import {
   INVESTMENT_TRUST_DAILY_BUY_RANK,
   FOREIGN_INVESTOR_DAILY_BUY_RANK
-} from './actions'
+} from './actions.js'
 
 const handleInstitutionalInvestorDailyBuyRank = (
   type = INVESTMENT_TRUST_DAILY_BUY_RANK
@@ -19,7 +19,6 @@ const handleInstitutionalInvestorDailyBuyRank = (
     const chatId = message.chat.id
     const onLoad = await this.sendLoadingMsg(chatId)
     let url, dateLocator, tableLocator
-
     switch (type) {
       case FOREIGN_INVESTOR_DAILY_BUY_RANK: {
         url = foreignInvestorDailyBuyUrl
@@ -27,7 +26,6 @@ const handleInstitutionalInvestorDailyBuyRank = (
         tableLocator = foreignInvestorDailyBuyTableLocator
         break
       }
-
       case INVESTMENT_TRUST_DAILY_BUY_RANK: {
         url = investmentTrustDailyBuyUrl
         dateLocator = investmentTrustDailyBuyDateLocator
@@ -35,7 +33,6 @@ const handleInstitutionalInvestorDailyBuyRank = (
         break
       }
     }
-
     const [date, tableBuffer] = await Promise.all([
       getElementInnerText(url, dateLocator, { waitUntil: 'networkidle0' }),
       screenshot(url, tableLocator, {
@@ -43,15 +40,11 @@ const handleInstitutionalInvestorDailyBuyRank = (
         waitUntil: 'networkidle0'
       })
     ])
-
     if (!tableBuffer) {
       this.sendTimeoutError(chatId)
     } else {
-      this.sendPhoto(chatId, tableBuffer, {
-        caption: date
-      })
+      this.sendPhoto(chatId, tableBuffer, { caption: date })
     }
-
     onLoad()
   }
 
