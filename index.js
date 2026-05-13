@@ -5,10 +5,7 @@ import { handleText } from './src/handlers/text.js'
 import { handleCandlestick } from './src/handlers/candlestick.js'
 import { handleStockNews } from './src/handlers/news.js'
 import { handleAfterHours } from './src/handlers/afterHours/index.js'
-import { createRequire } from 'module'
-
-const require = createRequire(import.meta.url)
-const { allowedChats } = require('./config.js')
+import { allowedChats } from './config.js'
 
 const checkAllowed = (msg) => {
   if (!allowedChats || allowedChats.length === 0) return true
