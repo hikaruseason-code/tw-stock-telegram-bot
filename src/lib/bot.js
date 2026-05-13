@@ -30,10 +30,10 @@ bot.sendStockIdNotFoundError = (chatId, stockId) => {
 }
 
 bot.sendTimeoutError = async (chatId) => {
-  const { message_id } = await bot.sendMessage(
-    chatId,
-    '發生了些問題，請再試一次...'
-  )
+  const { message_id } = await bot.sendMessage(chatId, '發生了些問題，請再試一次...')
   setTimeout(() => {
     bot.deleteMessage(chatId, message_id)
-  }, 5
+  }, 5000)
+}
+
+export default bot
