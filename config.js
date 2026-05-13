@@ -1,4 +1,70 @@
-module.exports = {
-  botToken: '8970612071:AAE3VXZL2_Op25832yoXD_HAQLeHXyItJyk',
-  allowedChats: [-1003566769507]  //
-}
+/**
+ * telegram bot
+ */
+export const botToken = '8970612071:AAE3VXZL2_Op25832yoXD_HAQLeHXyItJyk'
+export const allowedChats = [-1003566769507]
+
+/**
+ * stock chart
+ */
+export const chartUrl = 'https://tw.stock.yahoo.com/q/bc?s=STOCK_ID'
+export const chartLocator =
+  'iframe[src^="https://s.yimg.com/nb/tw_stock_frontend/scripts/StxChart"]'
+
+/**
+ * index chart
+ */
+export const tseChartUrl = 'https://tw.stock.yahoo.com/s/tse.php'
+export const tseCahrtLocator =
+  'iframe[src^="https://s.yimg.com/nb/tw_stock_frontend/scripts/TseChart"]'
+export const otcChartUrl = 'https://tw.stock.yahoo.com/s/otc.php'
+export const otcChartLocator =
+  'iframe[src^="https://s.yimg.com/nb/tw_stock_frontend/scripts/TseChart"]'
+
+/**
+ * stock/index raw data
+ */
+export const stockRawUrl =
+  'https://tw.quote.finance.yahoo.net/quote/q?type=tick&perd=1m&sym=STOCK_ID&callback='
+
+/**
+ * stock/index candlestick
+ */
+export const stockCandlestickUrl = 'https://tw.stock.yahoo.com/q/ta?s=STOCK_ID'
+export const tseCandlestickUrl = 'https://tw.stock.yahoo.com/t/idx.php'
+export const otcCandlestickUrl = 'https://tw.stock.yahoo.com/t/otc.php'
+export const candlestickLocator =
+  'iframe[src^="https://s.yimg.com/nb/tw_stock_frontend/scripts/TaChart"]'
+
+/**
+ * stock after hours data
+ */
+export const stockAfterHoursUrl =
+  'https://tw.screener.finance.yahoo.net/screener/screen02.html?symid=STOCK_ID'
+export const stockAfterHoursLocator =
+  'body >table > tbody > tr > td > table:nth-child(7)'
+
+/**
+ * Investment truse start buying
+ */
+export const investmentTrustStartBuyingUrl =
+  'https://goodinfo.tw/StockInfo/StockList.asp?RPT_TIME=&MARKET_CAT=%E6%99%BA%E6%85%A7%E9%81%B8%E8%82%A1&INDUSTRY_CAT=%E6%8A%95%E4%BF%A1%E9%80%A3%E7%BA%8C%E7%84%A1%E8%B2%B7%E8%B3%A3%E8%B6%85%E8%BD%89%E8%B2%B7%E9%80%B2+%E2%80%93+%E6%97%A5%40%40%E6%8A%95%E4%BF%A1%E9%80%A3%E8%B2%B7%E9%80%A3%E8%B3%A3%E8%BD%89%E6%8A%98%40%40%E6%8A%95%E4%BF%A1%E9%80%A3%E7%BA%8C%E7%84%A1%E8%B2%B7%E8%B3%A3%E8%B6%85%E8%BD%89%E8%B2%B7%E9%80%B2+%E2%80%93+%E6%97%A5'
+export const investmentTrustStartBuyingTableLocator = '#tblStockList'
+
+/**
+ * Institutional investors daily buy rank
+ */
+export const investmentTrustDailyBuyUrl =
+  'https://www.twse.com.tw/zh/page/trading/fund/TWT44U.html'
+export const investmentTrustDailyBuyDateLocator = '#reports .title h1'
+export const investmentTrustDailyBuyTableLocator = '#report-table'
+export const foreignInvestorDailyBuyUrl =
+  'https://www.twse.com.tw/zh/page/trading/fund/TWT38U.html'
+export const foreignInvestorDailyBuyDateLocator = '#reports .title h1'
+export const foreignInvestorDailyBuyTableLocator = '#report-table'
+
+/**
+ * misc
+ */
+export const tseId = '%23001'
+export const otcId = '%23026'
