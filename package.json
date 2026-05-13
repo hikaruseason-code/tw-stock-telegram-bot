@@ -1,5 +1,5 @@
 {
-  "type": "commonjs",
+  "type": "module",
   "name": "tw-stock-telegram-bot",
   "version": "1.0.0",
   "description": "Telegram bot to query real-time TW stock quotes, charts, news, and other related information.",
