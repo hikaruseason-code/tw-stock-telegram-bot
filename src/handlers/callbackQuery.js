@@ -1,4 +1,4 @@
-import { afterHoursCallbackQueryHandlers } from './afterHours'
+import { afterHoursCallbackQueryHandlers } from './afterHours/index.js'
 
 export function handleCallbackQuery(query) {
   const handlers = { ...afterHoursCallbackQueryHandlers }
