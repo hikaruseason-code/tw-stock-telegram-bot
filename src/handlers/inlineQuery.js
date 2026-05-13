@@ -1,10 +1,10 @@
-import { fetchStockData, fetchStockNews, isStockIdValid } from '../lib/stock'
+import { fetchStockData, fetchStockNews, isStockIdValid } from '../lib/stock.js'
 import {
   getIndexHTMLTemplate,
   getNewsListHTMLTemplate,
   getStockHTMLTemplate
-} from '../lib/template'
-import { tseId, otcId } from '../../config'
+} from '../lib/template.js'
+import { tseId, otcId } from '../../config.js'
 
 export async function handleInlineQuery({ id, query }) {
   if (query === '') {
@@ -12,33 +12,20 @@ export async function handleInlineQuery({ id, query }) {
       fetchStockData(tseId),
       fetchStockData(otcId)
     ])
-
-    await this.answerInlineQuery(
-      id,
-      [
-        {
-          type: 'article',
-          title: '加權指數現價',
-          input_message_content: {
-            message_text: getIndexHTMLTemplate(tseData),
-            parse_mode: 'HTML'
-          },
-          id: 'text_tse'
-        },
-        {
-          type: 'article',
-          title: '櫃買指數現價',
-          input_message_content: {
-            message_text: getIndexHTMLTemplate(otcData),
-            parse_mode: 'HTML'
-          },
-          id: 'text_otc'
-        }
-      ],
+    await this.answerInlineQuery(id, [
       {
-        cache_time: 0
+        type: 'article',
+        title: '加權指數現價',
+        input_message_content: { message_text: getIndexHTMLTemplate(tseData), parse_mode: 'HTML' },
+        id: 'text_tse'
+      },
+      {
+        type: 'article',
+        title: '櫃買指數現價',
+        input_message_content: { message_text: getIndexHTMLTemplate(otcData), parse_mode: 'HTML' },
+        id: 'text_otc'
       }
-    )
+    ], { cache_time: 0 })
   } else {
     if (isStockIdValid(query)) {
       const result = []
@@ -46,36 +33,24 @@ export async function handleInlineQuery({ id, query }) {
         fetchStockNews(query),
         fetchStockData(query)
       ])
-
       if (stockData.name) {
         result.push({
           type: 'article',
           title: `${query} 報價及五檔`,
-          input_message_content: {
-            message_text: getStockHTMLTemplate(stockData),
-            parse_mode: 'HTML'
-          },
+          input_message_content: { message_text: getStockHTMLTemplate(stockData), parse_mode: 'HTML' },
           id: `text_${query}`
         })
       }
-
       if (newsList && newsList.length) {
         result.push({
           type: 'article',
           title: `${query} 相關新聞`,
-          input_message_content: {
-            message_text: getNewsListHTMLTemplate(newsList),
-            parse_mode: 'HTML',
-            disable_web_page_preview: true
-          },
+          input_message_content: { message_text: getNewsListHTMLTemplate(newsList), parse_mode: 'HTML', disable_web_page_preview: true },
           id: `news_${query}`
         })
       }
-
       if (result.length) {
-        this.answerInlineQuery(id, result, {
-          cache_time: 0
-        })
+        this.answerInlineQuery(id, result, { cache_time: 0 })
       }
     }
   }
